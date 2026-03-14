@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0f0004">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Smart Attendance System</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div id="splash">
+  <div class="splash-ring-wrap">
+    <div class="splash-ring"></div>
+    <div class="splash-ring"></div>
+    <div class="splash-ring"></div>
+    <div class="splash-logo">SA</div>
+  </div>
+  <div>
+    <div class="splash-title">Smart Attendance</div>
+    <div class="splash-sub">System v2.0</div>
+  </div>
+  <div class="splash-bar-wrap"><div class="splash-bar"></div></div>
+</div>
+
+<div id="auth-screen">
+  <div id="form-login" class="auth-card">
+    <div class="auth-logo">SA</div>
+    <div class="auth-title">Smart Attendance</div>
+    <div class="auth-sub">Sign in to your account</div>
+    <div id="login-error" class="error-msg"></div>
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="login-username" placeholder="Enter username" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn-auth" id="login-btn" onclick="handleLogin()">
+      <span id="login-btn-text">Sign In</span>
+    </button>
+    <div class="auth-switch">
+      Don't have an account? <span onclick="showRegister()">Create Account</span>
+    </div>
+    <div class="admin-hint">
+      Admin: username <b>admin</b> / password <b>admin123</b>
+    </div>
+  </div>
+
+  <div id="form-register" class="auth-card" style="display:none;">
+    <div class="auth-logo" style="font-size:20px;">📝</div>
+    <div class="auth-title">Create Account</div>
+    <div class="auth-sub">Student registration</div>
+    <div id="register-error" class="error-msg"></div>
+    <div id="register-success" class="success-msg"></div>
+    <div class="form-group">
+      <label>Student ID</label>
+      <input type="text" id="reg-studentid" placeholder="e.g. 2024-001">
+      <div class="field-hint">Your Student ID given by your teacher</div>
+    </div>
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="reg-username" placeholder="Choose a username">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="reg-password" placeholder="Min 6 characters">
+    </div>
+    <div class="form-group">
+      <label>Confirm Password</label>
+      <input type="password" id="reg-confirm" placeholder="Repeat password">
+    </div>
+    <button class="btn-auth" id="register-btn" onclick="handleRegister()">
+      <span id="register-btn-text">Create Account</span>
+    </button>
+    <div class="auth-switch">
+      Already have an account? <span onclick="showLogin()">Sign In</span>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="/js/auth.js"></script>
+</body>
+</html>
