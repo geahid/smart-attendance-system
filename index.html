@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0f0004">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Smart Attendance System</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     SPLASH SCREEN
+     ═══════════════════════════════════════ -->
+<div id="splash">
+  <div class="splash-ring-wrap">
+    <div class="splash-ring"></div>
+    <div class="splash-ring"></div>
+    <div class="splash-ring"></div>
+    <div class="splash-logo">SA</div>
+  </div>
+  <div>
+    <div class="splash-title">Smart Attendance</div>
+    <div class="splash-sub">System v2.0</div>
+  </div>
+  <div class="splash-bar-wrap">
+    <div class="splash-bar"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     LOGIN PAGE
+     ═══════════════════════════════════════ -->
+<div id="page-login" class="page">
+  <div class="login-card">
+    <div class="login-logo">SA</div>
+    <div class="login-title">Smart Attendance</div>
+    <div class="login-sub">Teacher Portal</div>
+
+    <div id="login-error" class="error-msg">
+      ⚠ Invalid email or password. Please try again.
+    </div>
+
+    <div class="input-group">
+      <label>Email Address</label>
+      <input type="email" id="login-email" placeholder="teacher@school.edu" autocomplete="email">
+    </div>
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+    </div>
+
+    <button class="btn-primary" id="login-btn" onclick="handleLogin()">
+      <span id="login-btn-text">Sign In</span>
+    </button>
+
+    <div class="demo-hint">
+      Demo: <span>admin@school.edu</span> / <span>admin123</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     APP (after login)
+     ═══════════════════════════════════════ -->
+<div id="app">
+
+  <!-- Top Header -->
+  <div class="top-header">
+    <div class="header-brand">⚡ SmartAtt</div>
+    <div class="header-page-title" id="header-title">Dashboard</div>
+    <div class="header-avatar" id="header-avatar" onclick="navigate('profile')">AT</div>
+  </div>
+
+  <!-- Page: Dashboard -->
+  <div id="page-dashboard" class="page main-content">
+    <div class="welcome-banner">
+      <div class="welcome-time" id="welcome-time">Good morning</div>
+      <div class="welcome-name" id="welcome-name">Teacher</div>
+      <div class="welcome-sub">Ready to take attendance today?</div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card blue">
+        <div class="stat-icon blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="19" cy="7" r="2"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
+        </div>
+        <div class="stat-value" id="stat-total">0</div>
+        <div class="stat-label">Total Students</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-icon orange">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div class="stat-value" id="stat-classes">0</div>
+        <div class="stat-label">Classes Today</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-icon green">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="stat-value" id="stat-present">0</div>
+        <div class="stat-label">Present Today</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-icon red">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </div>
+        <div class="stat-value" id="stat-absent">0</div>
+        <div class="stat-label">Absent Today</div>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">Recent Sessions</div>
+      <span class="section-link" onclick="navigate('history')">View All</span>
+    </div>
+    <div id="recent-sessions-list">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Page: Attendance -->
+  <div id="page-attendance" class="page main-content" style="display:none;">
+    <div class="glass-card">
+      <div style="font-family:'Orbitron',monospace;font-size:15px;font-weight:700;margin-bottom:16px;background:linear-gradient(135deg,#fff,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">New Session</div>
+      <div class="form-group">
+        <label>Teacher Name</label>
+        <input type="text" id="att-teacher" placeholder="Your full name">
+      </div>
+      <div class="form-group">
+        <label>Schedule Code</label>
+        <select id="att-code">
+          <option value="">Select schedule code</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Subject</label>
+        <input type="text" id="att-subject" placeholder="e.g. Computer Science">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="att-date">
+        </div>
+        <div class="form-group">
+          <label>Time</label>
+          <input type="time" id="att-time">
+        </div>
+      </div>
+      <button class="btn btn-primary-sm btn-full" onclick="startAttendance()">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Start Attendance
+      </button>
+    </div>
+
+    <div id="attendance-session" style="display:none;">
+      <div class="glass-card" style="margin-bottom:16px;">
+        <div class="progress-label">
+          <span>Attendance Progress</span>
+          <span id="progress-pct">0%</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:10px;font-size:12px;">
+          <span class="text-success font-raj">✓ <span id="cnt-present">0</span> Present</span>
+          <span class="text-warning font-raj">⏱ <span id="cnt-late">0</span> Late</span>
+          <span class="text-accent font-raj">✗ <span id="cnt-absent">0</span> Absent</span>
+        </div>
+      </div>
+
+      <div class="tools-row">
+        <button class="tool-btn" onclick="markAllPresent()">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>All Present
+        </button>
+        <button class="tool-btn" onclick="filterAbsent()">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>Filter Absent
+        </button>
+        <button class="tool-btn" onclick="exportCSV()">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export CSV
+        </button>
+      </div>
+
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="att-search" placeholder="Search student..." oninput="filterStudents()">
+      </div>
+
+      <div class="section-title" style="margin-bottom:12px;">Student List</div>
+      <div class="student-list" id="att-student-list"></div>
+
+      <div style="margin-top:20px;">
+        <button class="btn btn-primary-sm btn-full" onclick="saveAttendance()">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Save Attendance
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page: Students -->
+  <div id="page-students" class="page main-content" style="display:none;">
+    <div class="section-header" style="margin-bottom:16px;">
+      <div class="section-title">All Students</div>
+      <button class="btn btn-primary-sm" style="padding:8px 16px;font-size:12px;" onclick="openAddStudent()">+ Add</button>
+    </div>
+
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="student-search" placeholder="Search by name or ID..." oninput="filterStudentList()">
+    </div>
+
+    <div class="student-list" id="student-list-container">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Page: History -->
+  <div id="page-history" class="page main-content" style="display:none;">
+    <div class="section-title" style="margin-bottom:16px;">Attendance History</div>
+    <div id="history-list">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Page: Profile -->
+  <div id="page-profile" class="page main-content" style="display:none;">
+    <div class="profile-hero">
+      <div class="profile-avatar-lg" id="profile-avatar-lg">AT</div>
+      <div class="profile-name" id="profile-name">Teacher Name</div>
+      <div class="profile-email" id="profile-email">email@school.edu</div>
+      <div class="codes-wrap" id="profile-codes"></div>
+    </div>
+
+    <div class="glass-card">
+      <div class="section-title" style="margin-bottom:16px;">Edit Profile</div>
+      <div class="form-group">
+        <label>Display Name</label>
+        <input type="text" id="profile-name-input" placeholder="Your name">
+      </div>
+      <div class="form-group">
+        <label>Schedule Codes (comma-separated)</label>
+        <input type="text" id="profile-codes-input" placeholder="CS101, MATH201">
+      </div>
+      <button class="btn btn-primary-sm btn-full" onclick="saveProfile()">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/></svg>
+        Save Changes
+      </button>
+    </div>
+
+    <div class="divider"></div>
+    <button class="btn btn-danger-sm btn-full" onclick="logout()">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sign Out
+    </button>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" id="nav-dashboard" onclick="navigate('dashboard')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>Home</span>
+    </div>
+    <div class="nav-item" id="nav-attendance" onclick="navigate('attendance')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      <span>Attendance</span>
+    </div>
+    <div class="nav-item" id="nav-students" onclick="navigate('students')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="19" cy="7" r="2"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
+      <span>Students</span>
+    </div>
+    <div class="nav-item" id="nav-history" onclick="navigate('history')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span>History</span>
+    </div>
+    <div class="nav-item" id="nav-profile" onclick="navigate('profile')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 21v-1a6 6 0 0 1 12 0v1"/></svg>
+      <span>Profile</span>
+    </div>
+  </nav>
+
+  <!-- FAB -->
+  <button class="fab" id="fab-take-att" onclick="navigate('attendance')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    Take Attendance
+  </button>
+</div>
+
+<!-- Add Student Modal -->
+<div class="modal-overlay" id="modal-add-student" onclick="closeModal('modal-add-student')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Add New Student</div>
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" id="new-student-name" placeholder="Student full name">
+    </div>
+    <div class="form-group">
+      <label>Student ID</label>
+      <input type="text" id="new-student-id" placeholder="e.g. 2024-009">
+    </div>
+    <div class="form-group">
+      <label>Section</label>
+      <input type="text" id="new-student-section" placeholder="e.g. CS-1A">
+    </div>
+    <button class="btn btn-primary-sm btn-full" onclick="addStudent()">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Student
+    </button>
+    <div style="margin-top:12px;">
+      <button class="btn btn-outline btn-full" onclick="closeModal('modal-add-student')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- History Detail Modal -->
+<div class="modal-overlay" id="modal-history-detail" onclick="closeModal('modal-history-detail')">
+  <div class="modal-sheet" onclick="event.stopPropagation()" style="max-height:90vh;">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-detail-title">Session Details</div>
+    <div id="modal-detail-content"></div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="/js/app.js"></script>
+</body>
+</html>
